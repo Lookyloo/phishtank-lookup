@@ -34,6 +34,7 @@ class Importer(AbstractManager):
         self.data_dir_archive.mkdir(parents=True, exist_ok=True)
 
         phishtank_api_key = get_config('generic', 'phishtank_api_key')
+        self.expire_urls = get_config('generic', 'expire_urls')
 
         if phishtank_api_key:
             self.json_db_url = f'https://data.phishtank.com/data/{phishtank_api_key}/online-valid.json'
@@ -54,8 +55,9 @@ class Importer(AbstractManager):
                     return
                 else:
                     self.logger.info('Interval expired, archive old file...')
+                    dest_dir = self.data_dir_archive / f'{path.name}.gz'
                     with path.open('rb') as f_in:
-                        with gzip.open(f'{path}.gz', 'wb') as f_out:
+                        with gzip.open(dest_dir, 'wb') as f_out:
                             shutil.copyfileobj(f_in, f_out)
                     path.unlink()
                     self.logger.info('Archiving over.')
@@ -82,7 +84,7 @@ class Importer(AbstractManager):
                 entry['url'] = unquote_plus(entry['url'])
                 entry['details'] = json.dumps(entry['details'])
                 p.hmset(entry['url'], entry)
-                p.expire(entry['url'], 3600 * 48)
+                p.expire(entry['url'], 3600 * self.expire_urls)
             p.execute()
             self.logger.info('Importing done.')
 

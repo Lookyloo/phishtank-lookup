@@ -17,7 +17,7 @@ def main():
     Popen(['importer'])
     print('done.')
     print('Start website...')
-    # Popen(['start_website'])
+    Popen(['start_website'])
     print('done.')
 
 
