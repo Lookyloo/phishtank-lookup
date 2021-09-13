@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "phishtank"
+version = "0.1.0"
+description = "Simple API to query a local Phishtank database"
+authors = ["Raphaël Vinot <raphael.vinot@circl.lu>"]
+license = "BSD-3-Clause"
+
+[tool.poetry.scripts]
+start = "bin.start:main"
+stop = "bin.stop:main"
+importer = "bin.importer:main"
+shutdown = "bin.shutdown:main"
+run_backend = "bin.run_backend:main"
+start_website = "bin.start_website:main"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+requests = "^2.26.0"
+redis = "^3.5.3"
+hiredis = "^2.0.0"
+flask-restx = "^0.5.1"
+gunicorn = "^20.1.0"
+
+[tool.poetry.dev-dependencies]
+ipython = "^7.27.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
