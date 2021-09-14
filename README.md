@@ -14,7 +14,7 @@ You need poetry installed, see the [install guide](https://python-poetry.org/doc
 
 You need to have redis cloned and installed in the same directory you clone `phishtank-lookup` in:
 `phishtank-lookup` and and `redis` must be in the same directory, and **not** `redis` cloned in the
-`uwhoisd` directory. See [this guide](https://www.lookyloo.eu/docs/main/install-lookyloo.html#_install_redis).
+`phishtank-lookup` directory. See [this guide](https://www.lookyloo.eu/docs/main/install-lookyloo.html#_install_redis).
 
 ## Installation
 
