@@ -2,7 +2,7 @@
     "loglevel": "INFO",
     "website_listen_ip": "0.0.0.0",
     "website_listen_port": 5300,
-    "phishtank_api_key": null,
+    "phishtank_api_key": "",
     "phishtank_useragent": "phishtank/phishtank-lookup",
     "expire_urls": 72,
     "dump_fetch_frequency": 4,
