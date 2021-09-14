@@ -12,7 +12,7 @@
         "website_listen_port": "Port Flask will listen on.",
         "phishtank_api_key": "API key for fetching the DB dump. Not required.",
         "phishtank_useragent": "User agent to use when fetching the DB dump.",
-        "expire_urls": "Expire the URLs after that amount of hours."
+        "expire_urls": "Expire the URLs after that amount of hours.",
         "dump_fetch_frequency": "Frequency (in hours) at which the json dump will be fetched. Doing it too frequently will get you blacklisted."
     }
 }
