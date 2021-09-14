@@ -8,6 +8,7 @@ license = "BSD-3-Clause"
 [tool.poetry.scripts]
 start = "bin.start:main"
 stop = "bin.stop:main"
+update = "bin.update:main"
 importer = "bin.importer:main"
 shutdown = "bin.shutdown:main"
 run_backend = "bin.run_backend:main"

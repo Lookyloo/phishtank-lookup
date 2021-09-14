@@ -5,6 +5,7 @@ import gzip
 import json
 import logging
 import shutil
+from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
@@ -35,6 +36,7 @@ class Importer(AbstractManager):
 
         phishtank_api_key = get_config('generic', 'phishtank_api_key')
         self.expire_urls = get_config('generic', 'expire_urls')
+        self.fetch_freq = get_config('generic', 'dump_fetch_frequency')
 
         if phishtank_api_key:
             self.json_db_url = f'https://data.phishtank.com/data/{phishtank_api_key}/online-valid.json'
@@ -49,7 +51,7 @@ class Importer(AbstractManager):
         for path in self.data_dir.iterdir():
             if path.is_file() and path.suffix == '.json':
                 last_update = datetime.fromisoformat(path.stem)
-                if last_update > datetime.now() - timedelta(hours=1):
+                if last_update > datetime.now() - timedelta(hours=self.fetch_freq):
                     # The dump is generated once every hour.
                     self.logger.info(f'Interval not expired ({(last_update + timedelta(hours=1)).isoformat()}), not fetching.')
                     return
@@ -76,22 +78,73 @@ class Importer(AbstractManager):
         return dest_file
 
     def _import(self, to_import: Path):
-        '''Import a dump'''
+        '''Import a dump
+            Keys in redis:
+                * 'urls': the list of urls currently in the database - zrank to expire them
+                * <url>: the URL from the dump, the complete entry - expire automatically
+                * <ip>: the URLs associated to this IP - zrank to expire them and autoexpire
+                * <ASN>: the URLs associated to this AS - zrank to expire them and autoexpire
+                * <country>: the URLs associated to this CC - zrank to expire them an autoexpire
+        '''
         with to_import.open() as f:
             self.logger.info('Importing new file...')
-            p = self.redis.pipeline()
+            expire_zranks = int((datetime.now() + timedelta(hours=self.expire_urls)).timestamp())
+            # Make sure the urls aren't expired before the zranks are cleared up
+            expire_in_sec = 3600 * (self.expire_urls + self.fetch_freq)
+
+            urls = {}
+            ips = defaultdict(list)
+            asns = defaultdict(list)
+            country_codes = defaultdict(list)
+
             for entry in json.load(f):
                 entry['url'] = unquote_plus(entry['url'])
+
+                for d in entry['details']:
+                    ips[d['ip_address']].append(entry['url'])
+                    asns[d['announcing_network']].append(entry['url'])
+                    country_codes[d['country']].append(entry['url'])
+
                 entry['details'] = json.dumps(entry['details'])
-                p.hmset(entry['url'], entry)
-                p.expire(entry['url'], 3600 * self.expire_urls)
+                urls[entry['url']] = entry
+
+            p = self.redis.pipeline()
+            zranks_to_expire = ['url', 'ips', 'asns', 'ccs']
+            p.zadd('urls', {url: expire_zranks for url in urls.keys()})
+            for url, entry in urls.items():
+                p.hmset(url, entry)
+                p.expire(url, expire_in_sec)
+
+            p.zadd('ips', {ip: expire_zranks for ip in ips.keys()})
+            for ip, urls in ips.items():
+                p.zadd(ip, {url: expire_zranks for url in urls})
+                p.expire(ip, expire_in_sec)
+                zranks_to_expire.append(ip)
+
+            p.zadd('asns', {asn: expire_zranks for asn in asns.keys()})
+            for asn, urls in asns.items():
+                p.zadd(asn, {url: expire_zranks for url in urls})
+                p.expire(asn, expire_in_sec)
+                zranks_to_expire.append(asn)
+
+            p.zadd('ccs', {cc: expire_zranks for cc in country_codes.keys()})
+            for cc, urls in country_codes.items():
+                p.zadd(cc, {url: expire_zranks for url in urls})
+                p.expire(cc, expire_in_sec)
+                zranks_to_expire.append(cc)
+
+            # Expire the keys we just updated
+            for key in zranks_to_expire:
+                p.zremrangebyscore(key, '-Inf', int(datetime.now().timestamp()))
+
             p.execute()
             self.logger.info('Importing done.')
 
 
 def main():
     i = Importer()
-    i.run(sleep_in_sec=3600 * 1)
+    fetch_freq = get_config('generic', 'dump_fetch_frequency')
+    i.run(sleep_in_sec=3600 * fetch_freq)
 
 
 if __name__ == '__main__':

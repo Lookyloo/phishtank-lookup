@@ -61,3 +61,68 @@ class CheckURL(Resource):
         if 'url' not in to_query:
             return {'error': 'The URL is required...'}, 400
         return self._format_response(to_query['url'])
+
+
+@api.route('/urls')
+@api.doc(description='Get all the URLs')
+class URLs(Resource):
+
+    def get(self):
+        return phishtank.get_urls()
+
+
+@api.route('/ips')
+@api.doc(description='Get all the IPs')
+class IPs(Resource):
+
+    def get(self):
+        return phishtank.get_ips()
+
+
+@api.route('/asns')
+@api.doc(description='Get all the ASNs')
+class ASNs(Resource):
+
+    def get(self):
+        return phishtank.get_asns()
+
+
+@api.route('/ccs')
+@api.doc(description='Get all the Country Codes')
+class CCs(Resource):
+
+    def get(self):
+        return phishtank.get_ccs()
+
+
+@api.route('/urls_by_ip')
+@api.doc(description='Get all the URLs by IP')
+class URLsByIPs(Resource):
+
+    @api.param('ip', 'The IP to query', required=True)
+    def get(self):
+        if 'ip' not in request.args or not request.args.get('ip'):
+            return {'error': 'The IP is required...'}, 400
+        return phishtank.get_urls_by_ip(request.args['ip'])
+
+
+@api.route('/urls_by_asn')
+@api.doc(description='Get all the URLs by ASN')
+class URLsByASN(Resource):
+
+    @api.param('asn', 'The ASN to query', required=True)
+    def get(self):
+        if 'asn' not in request.args or not request.args.get('asn'):
+            return {'error': 'The ASN is required...'}, 400
+        return phishtank.get_urls_by_asn(request.args['asn'])
+
+
+@api.route('/urls_by_cc')
+@api.doc(description='Get all the URLs by Country Code')
+class URLsByCC(Resource):
+
+    @api.param('cc', 'The CC to query', required=True)
+    def get(self):
+        if 'cc' not in request.args or not request.args.get('cc'):
+            return {'error': 'The Country Code is required...'}, 400
+        return phishtank.get_urls_by_cc(request.args['cc'])
