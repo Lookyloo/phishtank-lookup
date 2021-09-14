@@ -57,10 +57,20 @@ class CheckURL(Resource):
 
     @api.doc(body=checkurl_fields)
     def post(self):
-        to_query: Dict = request.get_json(force=True)
-        if 'url' not in to_query:
+        to_query: Dict = request.get_json(force=True)  # type: ignore
+        if 'url' not in to_query or not to_query.get('url'):
             return {'error': 'The URL is required...'}, 400
         return self._format_response(to_query['url'])
+
+
+@api.route('/url')
+@api.doc(description='Get the full URL entry')
+class URL(Resource):
+    @api.param('url', 'The URL to query', required=True)
+    def get(self):
+        if 'url' not in request.args or not request.args.get('url'):
+            return {'error': 'The URL is required...'}, 400
+        return phishtank.get_url_entry(request.args['url'])
 
 
 @api.route('/urls')

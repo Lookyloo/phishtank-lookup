@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import json
 import logging
 from typing import Optional, Dict
 
@@ -26,7 +27,11 @@ class Phishtank():
         return Redis(connection_pool=self.redis_pool)
 
     def get_url_entry(self, url: str) -> Optional[Dict]:
-        return self.redis.hgetall(url)
+        entry = self.redis.hgetall(url)
+        if not entry:
+            return None
+        entry['details'] = json.loads(entry['details'])
+        return entry
 
     def get_ips(self) -> Optional[str]:
         return self.redis.zrangebyscore('ips', '-Inf', '+Inf')

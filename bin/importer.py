@@ -8,7 +8,7 @@ import shutil
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Dict, List
 from urllib.parse import unquote_plus
 
 from redis import Redis
@@ -54,7 +54,7 @@ class Importer(AbstractManager):
                 if last_update > datetime.now() - timedelta(hours=self.fetch_freq):
                     # The dump is generated once every hour.
                     self.logger.info(f'Interval not expired ({(last_update + timedelta(hours=1)).isoformat()}), not fetching.')
-                    return
+                    return None
                 else:
                     self.logger.info('Interval expired, archive old file...')
                     dest_dir = self.data_dir_archive / f'{path.name}.gz'
@@ -92,10 +92,10 @@ class Importer(AbstractManager):
             # Make sure the urls aren't expired before the zranks are cleared up
             expire_in_sec = 3600 * (self.expire_urls + self.fetch_freq)
 
-            urls = {}
-            ips = defaultdict(list)
-            asns = defaultdict(list)
-            country_codes = defaultdict(list)
+            urls: Dict[str, Dict] = {}
+            ips: Dict[str, List[str]] = defaultdict(list)
+            asns: Dict[str, List[str]] = defaultdict(list)
+            country_codes: Dict[str, List[str]] = defaultdict(list)
 
             for entry in json.load(f):
                 entry['url'] = unquote_plus(entry['url'])
@@ -116,20 +116,20 @@ class Importer(AbstractManager):
                 p.expire(url, expire_in_sec)
 
             p.zadd('ips', {ip: expire_zranks for ip in ips.keys()})
-            for ip, urls in ips.items():
-                p.zadd(ip, {url: expire_zranks for url in urls})
+            for ip, _urls in ips.items():
+                p.zadd(ip, {url: expire_zranks for url in _urls})
                 p.expire(ip, expire_in_sec)
                 zranks_to_expire.append(ip)
 
             p.zadd('asns', {asn: expire_zranks for asn in asns.keys()})
-            for asn, urls in asns.items():
-                p.zadd(asn, {url: expire_zranks for url in urls})
+            for asn, _urls in asns.items():
+                p.zadd(asn, {url: expire_zranks for url in _urls})
                 p.expire(asn, expire_in_sec)
                 zranks_to_expire.append(asn)
 
             p.zadd('ccs', {cc: expire_zranks for cc in country_codes.keys()})
-            for cc, urls in country_codes.items():
-                p.zadd(cc, {url: expire_zranks for url in urls})
+            for cc, _urls in country_codes.items():
+                p.zadd(cc, {url: expire_zranks for url in _urls})
                 p.expire(cc, expire_in_sec)
                 zranks_to_expire.append(cc)
 
