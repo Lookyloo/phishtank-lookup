@@ -57,4 +57,4 @@ poetry run stop
 With the default configuration, you can access the web interface on `http://0.0.0.0:5300`,
 where you will find the API and can start playing with it.
 
-![API](doc/api.png)]
+![API](doc/api.png)
