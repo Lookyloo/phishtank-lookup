@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "phishtank"
-version = "0.1.0"
-description = "Simple API to query a local Phishtank database"
+version = "1.0"
+description = "Simple Tool to query a local Phishtank database"
 authors = ["Raphaël Vinot <raphael.vinot@circl.lu>"]
 license = "BSD-3-Clause"
 
