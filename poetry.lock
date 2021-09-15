@@ -344,7 +344,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "pyphishtanklookup"
-version = "1.0"
+version = "1.0.1"
 description = "Python CLI and module for PhishtankLookup"
 category = "main"
 optional = false
@@ -352,6 +352,9 @@ python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
 requests = ">=2.26.0,<3.0.0"
+
+[package.extras]
+docs = ["Sphinx (>=4.2,<5.0)"]
 
 [[package]]
 name = "pyrsistent"
@@ -702,8 +705,8 @@ pygments = [
     {file = "Pygments-2.10.0.tar.gz", hash = "sha256:f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"},
 ]
 pyphishtanklookup = [
-    {file = "pyphishtanklookup-1.0-py3-none-any.whl", hash = "sha256:9fc29abfb56252d1f761ce34e66a7c0890f8b623bcb09addb87b25f355388526"},
-    {file = "pyphishtanklookup-1.0.tar.gz", hash = "sha256:9a55df2e3881d25e94486cbc3632b21d11eb31cf8f1a8669071aa9ccef76faf3"},
+    {file = "pyphishtanklookup-1.0.1-py3-none-any.whl", hash = "sha256:f000c088255b2d18b166c80b51457e13b1dea30538d1d1943344d70ddc711b41"},
+    {file = "pyphishtanklookup-1.0.1.tar.gz", hash = "sha256:509e4134f9f8ef843987f9a32bed872cf856c15d838d1be434485dc063ee0dc6"},
 ]
 pyrsistent = [
     {file = "pyrsistent-0.18.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f4c8cabb46ff8e5d61f56a037974228e978f26bfefce4f61a4b1ac0ba7a2ab72"},

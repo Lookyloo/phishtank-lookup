@@ -21,6 +21,7 @@ redis = "^3.5.3"
 hiredis = "^2.0.0"
 flask-restx = "^0.5.1"
 gunicorn = "^20.1.0"
+pyphishtanklookup = "^1.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.27.0"
