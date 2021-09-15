@@ -8,6 +8,7 @@ from flask import request, Flask
 from flask_restx import Api, Namespace, Resource, fields  # type: ignore
 
 from phishtank.phishtank import Phishtank
+from phishtank.helpers import get_config
 
 from .helpers import get_secret_key
 from .proxied import ReverseProxied
@@ -20,11 +21,22 @@ app.wsgi_app = ReverseProxied(app.wsgi_app)  # type: ignore
 
 app.config['SECRET_KEY'] = get_secret_key()
 
-api = Api(app, title='Phishtank API',
-          description='API to query a Phishtank lookup instance.',
+expire = get_config('generic', 'expire_urls')
+
+api = Api(app, title='Phishtank Lookup API',
+          description=f'API to query a Phishtank lookup instance. The instance keeps the URLs for {expire} hours',
           version=pkg_resources.get_distribution('phishtank').version)
 
 phishtank: Phishtank = Phishtank()
+
+
+@api.route('/info')
+@api.doc(description='Get info about the instance')
+class Info(Resource):
+
+    def get(self):
+        return phishtank.info()
+
 
 checkurl_fields = api.model('CheckURLFields', {
     'url': fields.Url(description="The URL to check", required=True),

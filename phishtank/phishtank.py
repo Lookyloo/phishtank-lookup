@@ -26,6 +26,16 @@ class Phishtank():
     def redis(self):
         return Redis(connection_pool=self.redis_pool)
 
+    def info(self):
+        return {
+            "expire_urls": get_config('generic', 'expire_urls'),
+            "dump_fetch_frequency": get_config('generic', 'dump_fetch_frequency'),
+            "unique_urls": self.redis.zcard('urls'),
+            "unique_ccs": self.redis.zcard('ccs'),
+            "unique_asns": self.redis.zcard('asns'),
+            "unique_ips": self.redis.zcard('ips')
+        }
+
     def get_url_entry(self, url: str) -> Optional[Dict]:
         entry = self.redis.hgetall(url)
         if not entry:
