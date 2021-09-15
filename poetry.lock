@@ -343,6 +343,17 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "pyphishtanklookup"
+version = "1.0"
+description = "Python CLI and module for PhishtankLookup"
+category = "main"
+optional = false
+python-versions = ">=3.8,<4.0"
+
+[package.dependencies]
+requests = ">=2.26.0,<3.0.0"
+
+[[package]]
 name = "pyrsistent"
 version = "0.18.0"
 description = "Persistent/Functional/Immutable data structures"
@@ -481,7 +492,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "77dfee1f52b7a3902c129746495f2cbc2a578aaf1ac4751d16d18cd3b6c3efd7"
+content-hash = "ae624b7d5b70e7b8df56dabd7af03c5883bb682ce389225a45f366f4959ff0c5"
 
 [metadata.files]
 aniso8601 = [
@@ -689,6 +700,10 @@ ptyprocess = [
 pygments = [
     {file = "Pygments-2.10.0-py3-none-any.whl", hash = "sha256:b8e67fe6af78f492b3c4b3e2970c0624cbf08beb1e493b2c99b9fa1b67a20380"},
     {file = "Pygments-2.10.0.tar.gz", hash = "sha256:f398865f7eb6874156579fdf36bc840a03cab64d1cde9e93d68f46a425ec52c6"},
+]
+pyphishtanklookup = [
+    {file = "pyphishtanklookup-1.0-py3-none-any.whl", hash = "sha256:9fc29abfb56252d1f761ce34e66a7c0890f8b623bcb09addb87b25f355388526"},
+    {file = "pyphishtanklookup-1.0.tar.gz", hash = "sha256:9a55df2e3881d25e94486cbc3632b21d11eb31cf8f1a8669071aa9ccef76faf3"},
 ]
 pyrsistent = [
     {file = "pyrsistent-0.18.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:f4c8cabb46ff8e5d61f56a037974228e978f26bfefce4f61a4b1ac0ba7a2ab72"},
