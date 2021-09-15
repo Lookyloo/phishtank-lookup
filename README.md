@@ -22,6 +22,7 @@ From the `phishtank-lookup` directory you just cloned, run:
 
 ```bash
 poetry install
+echo PHISHTANK_HOME="`pwd`" >> .env
 ```
 
 ## Configuration

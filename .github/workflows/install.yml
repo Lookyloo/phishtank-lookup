@@ -26,6 +26,7 @@ jobs:
         python -m pip install --upgrade pip poetry
         poetry install
         echo PHISHTANK_HOME="`pwd`" >> .env
+        poetry run start
 
     - name: Test with nosetests
       run: |
