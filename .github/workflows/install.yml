@@ -21,6 +21,17 @@ jobs:
       with:
         python-version: ${{matrix.python-version}}
 
+	- name: Install and setup redis
+	  run: |
+		pushd ..
+		git clone https://github.com/antirez/redis.git
+		pushd redis
+		git checkout 6.2
+		make
+		popd
+		popd
+
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip poetry
