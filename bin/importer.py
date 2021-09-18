@@ -109,7 +109,7 @@ class Importer(AbstractManager):
                 urls[entry['url']] = entry
 
             p = self.redis.pipeline()
-            zranks_to_expire = ['url', 'ips', 'asns', 'ccs']
+            zranks_to_expire = ['urls', 'ips', 'asns', 'ccs']
             p.zadd('urls', {url: expire_zranks for url in urls.keys()})
             for url, entry in urls.items():
                 p.hmset(url, entry)
