@@ -4,8 +4,8 @@
 import logging
 from subprocess import Popen
 
-from phishtank.abstractmanager import AbstractManager
-from phishtank.helpers import get_config, get_homedir
+from phishtank.default import AbstractManager
+from phishtank.default import get_config, get_homedir
 
 logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s:%(message)s',
                     level=logging.INFO)

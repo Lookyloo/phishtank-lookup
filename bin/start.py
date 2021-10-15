@@ -3,7 +3,7 @@
 
 from subprocess import Popen, run
 
-from phishtank.helpers import get_homedir
+from phishtank.default import get_homedir
 
 
 def main():

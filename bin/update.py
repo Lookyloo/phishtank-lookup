@@ -10,7 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from phishtank.helpers import get_homedir
+from phishtank.default import get_homedir, get_config
 
 logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s:%(message)s',
                     level=logging.INFO)
@@ -51,7 +51,7 @@ def check_poetry_version():
     version = poetry_version_str.split()[2]
     version_details = tuple(int(i) for i in version.split('.'))
     if version_details < (1, 1, 0):
-        print('Phishtank lookup requires poetry >= 1.1.0, please update.')
+        print('The project requires poetry >= 1.1.0, please update.')
         print('If you installed with "pip install --user poetry", run "pip install --user -U poetry"')
         print('If you installed via the recommended method, use "poetry self update"')
         print('More details: https://github.com/python-poetry/poetry#updating-poetry')
@@ -87,26 +87,26 @@ def main():
     keep_going(args.yes)
     run_command(f'poetry run {(Path("tools") / "validate_config_files.py").as_posix()} --update')
 
-    print('* Restarting Phishtank Lookup.')
+    print('* Restarting')
     keep_going(args.yes)
     if platform.system() == 'Windows':
-        print('Restarting Phishtank Lookup with poetry...')
+        print('Restarting with poetry...')
         run_command('poetry run stop', expect_fail=True)
         run_command('poetry run start', capture_output=False)
-        print('Phishtank Lookup started.')
+        print('Started.')
     else:
-        service = "phishtank-lookup"
+        service = get_config('generic', 'systemd_service_name')
         p = subprocess.run(["systemctl", "is-active", "--quiet", service])
         try:
             p.check_returncode()
-            print('Restarting Phishtank Lookup with systemd...')
+            print('Restarting with systemd...')
             run_command(f'sudo service {service} restart')
             print('done.')
         except subprocess.CalledProcessError:
-            print('Restarting Phishtank Lookup with poetry...')
+            print('Restarting with poetry...')
             run_command('poetry run stop', expect_fail=True)
             run_command('poetry run start', capture_output=False)
-            print('Phishtank Lookup started.')
+            print('Started.')
 
 
 if __name__ == '__main__':

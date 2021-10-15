@@ -5,7 +5,7 @@ import json
 import logging
 import argparse
 
-from phishtank.helpers import get_homedir
+from phishtank.default import get_homedir
 
 
 def validate_generic_config_file():

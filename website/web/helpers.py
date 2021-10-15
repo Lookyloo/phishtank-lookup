@@ -5,7 +5,7 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
-from phishtank.helpers import get_homedir
+from phishtank.default import get_homedir
 
 
 def src_request_ip(request) -> str:

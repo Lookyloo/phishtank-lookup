@@ -14,8 +14,8 @@ from urllib.parse import unquote_plus
 from redis import Redis
 import requests
 
-from phishtank.abstractmanager import AbstractManager
-from phishtank.helpers import (get_data_dir, get_socket_path, get_config)
+from phishtank.default import get_socket_path, get_config, AbstractManager
+from phishtank.helpers import get_data_dir
 
 logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s:%(message)s',
                     level=logging.INFO)

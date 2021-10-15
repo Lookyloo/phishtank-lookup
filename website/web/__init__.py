@@ -5,15 +5,13 @@ import pkg_resources
 from typing import Dict
 
 from flask import request, Flask
-from flask_restx import Api, Namespace, Resource, fields  # type: ignore
+from flask_restx import Api, Resource, fields  # type: ignore
 
 from phishtank.phishtank import Phishtank
-from phishtank.helpers import get_config
+from phishtank.default import get_config
 
 from .helpers import get_secret_key
 from .proxied import ReverseProxied
-
-api = Namespace('GenericAPI', description='Generic Phishtank API', path='/')
 
 app: Flask = Flask(__name__)
 

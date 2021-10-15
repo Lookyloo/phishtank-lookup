@@ -6,6 +6,7 @@
     "phishtank_useragent": "phishtank/phishtank-lookup",
     "expire_urls": 72,
     "dump_fetch_frequency": 4,
+    "systemd_service_name": "phishtank-lookup",
     "_notes": {
         "loglevel": "(lookyloo) Can be one of the value listed here: https://docs.python.org/3/library/logging.html#levels",
         "website_listen_ip": "IP Flask will listen on. Defaults to 0.0.0.0, meaning all interfaces.",
@@ -14,5 +15,6 @@
         "phishtank_useragent": "User agent to use when fetching the DB dump.",
         "expire_urls": "Expire the URLs after that amount of hours.",
         "dump_fetch_frequency": "Frequency (in hours) at which the json dump will be fetched. Doing it too frequently will get you blacklisted."
+        "systemd_service_name": "(Optional) Name of the systemd service if your project has one."
     }
 }
