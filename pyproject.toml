@@ -17,18 +17,18 @@ start_website = "bin.start_website:main"
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.26.0"
-redis = "^3.5.3"
-hiredis = "^2.0.0"
+redis = {version = "^4.0.2", extras = ["hiredis"]}
 flask-restx = "^0.5.1"
 gunicorn = "^20.1.0"
 pyphishtanklookup = "^1.0"
 
 [tool.poetry.dev-dependencies]
-ipython = "^7.27.0"
-mypy = "^0.910"
-types-setuptools = "^57.0.2"
-types-redis = "^3.5.8"
-types-requests = "^2.25.6"
+ipython = "^7.30.1"
+mypy = "^0.920"
+types-setuptools = "^57.4.4"
+types-redis = "^4.0.4"
+types-requests = "^2.26.2"
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

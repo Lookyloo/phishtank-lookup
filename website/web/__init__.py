@@ -28,6 +28,14 @@ api = Api(app, title='Phishtank Lookup API',
 phishtank: Phishtank = Phishtank()
 
 
+@api.route('/redis_up')
+@api.doc(description='Check if redis is up and running')
+class RedisUp(Resource):
+
+    def get(self):
+        return phishtank.check_redis_up()
+
+
 @api.route('/info')
 @api.doc(description='Get info about the instance')
 class Info(Resource):

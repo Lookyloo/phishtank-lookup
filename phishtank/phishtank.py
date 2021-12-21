@@ -24,6 +24,9 @@ class Phishtank():
     def redis(self):
         return Redis(connection_pool=self.redis_pool)
 
+    def check_redis_up(self):
+        return self.redis.ping()
+
     def info(self):
         return {
             "expire_urls": get_config('generic', 'expire_urls'),
