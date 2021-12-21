@@ -40,9 +40,9 @@ jobs:
 
     - name: Run API tests
       run: |
-        poetry run start
+        poetry run update --yes
 
-        git clone git@github.com:Lookyloo/PyPhishtankLookup.git
+        git clone https://github.com/Lookyloo/PyPhishtankLookup.git
         pushd PyPhishtankLookup
         poetry install
         poetry run pytest tests/test_web.py
