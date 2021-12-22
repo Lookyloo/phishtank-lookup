@@ -24,9 +24,9 @@ pyphishtanklookup = "^1.0"
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.30.1"
-mypy = "^0.920"
+mypy = "^0.921"
 types-setuptools = "^57.4.4"
-types-redis = "^4.0.4"
+types-redis = "^4.0.5"
 types-requests = "^2.26.2"
 pytest-cov = "^3.0.0"
 

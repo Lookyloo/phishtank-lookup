@@ -49,3 +49,9 @@ jobs:
         popd
 
         poetry run stop
+
+    - name: Test update script
+      run: |
+        poetry run update --yes
+        sleep 30
+        poetry run stop
