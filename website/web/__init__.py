@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import pkg_resources
+from importlib.metadata import version
 from typing import Dict
 
 from flask import request, Flask
@@ -22,7 +22,7 @@ expire = get_config('generic', 'expire_urls')
 
 api = Api(app, title='Phishtank Lookup API',
           description=f'API to query a Phishtank lookup instance. The instance keeps the URLs for {expire} hours',
-          version=pkg_resources.get_distribution('phishtank').version)
+          version=version('phishtank'))
 
 phishtank: Phishtank = Phishtank()
 
