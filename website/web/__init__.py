@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+import logging
+import logging.config
+
 from importlib.metadata import version
 from typing import Dict
 
@@ -11,6 +14,8 @@ from phishtank.default import get_config
 
 from .helpers import get_secret_key
 from .proxied import ReverseProxied
+
+logging.config.dictConfig(get_config('logging'))
 
 app: Flask = Flask(__name__)
 

@@ -3,6 +3,7 @@
 import gzip
 import json
 import logging
+import logging.config
 import shutil
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -16,8 +17,7 @@ import requests
 from phishtank.default import get_socket_path, get_config, AbstractManager
 from phishtank.helpers import get_data_dir
 
-logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s:%(message)s',
-                    level=logging.INFO)
+logging.config.dictConfig(get_config('logging'))
 
 
 class Importer(AbstractManager):
