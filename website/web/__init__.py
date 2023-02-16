@@ -79,7 +79,7 @@ class CheckURL(Resource):
 
     @api.doc(body=checkurl_fields)
     def post(self):
-        to_query: Dict = request.get_json(force=True)  # type: ignore
+        to_query: Dict = request.get_json(force=True)
         if 'url' not in to_query or not to_query.get('url'):
             return {'error': 'The URL is required...'}, 400
         return self._format_response(to_query['url'])
