@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import gzip
 import json
 import logging
@@ -8,7 +10,7 @@ import shutil
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional, Dict, List
+from typing import Any
 from urllib.parse import unquote_plus
 
 from redis import Redis
@@ -42,11 +44,11 @@ class Importer(AbstractManager):
         else:
             self.json_db_url = 'https://data.phishtank.com/data/online-valid.json'
 
-    def _to_run_forever(self):
+    def _to_run_forever(self) -> None:
         if to_import := self._fetch():
             self._import(to_import)
 
-    def _fetch(self) -> Optional[Path]:
+    def _fetch(self) -> Path | None:
         for path in self.data_dir.iterdir():
             if path.is_file() and path.suffix == '.json':
                 last_update = datetime.fromisoformat(path.stem)
@@ -76,7 +78,7 @@ class Importer(AbstractManager):
             json.dump(response.json(), f)
         return dest_file
 
-    def _import(self, to_import: Path):
+    def _import(self, to_import: Path) -> None:
         '''Import a dump
             Keys in redis:
                 * 'urls': the list of urls currently in the database - zrank to expire them
@@ -91,10 +93,10 @@ class Importer(AbstractManager):
             # Make sure the urls aren't expired before the zranks are cleared up
             expire_in_sec = 3600 * (self.expire_urls + self.fetch_freq)
 
-            urls: Dict[str, Dict] = {}
-            ips: Dict[str, List[str]] = defaultdict(list)
-            asns: Dict[str, List[str]] = defaultdict(list)
-            country_codes: Dict[str, List[str]] = defaultdict(list)
+            urls: dict[str, dict[str, Any]] = {}
+            ips: dict[str, list[str]] = defaultdict(list)
+            asns: dict[str, list[str]] = defaultdict(list)
+            country_codes: dict[str, list[str]] = defaultdict(list)
 
             for entry in json.load(f):
                 entry['url'] = unquote_plus(entry['url'])
@@ -140,7 +142,7 @@ class Importer(AbstractManager):
             self.logger.info('Importing done.')
 
 
-def main():
+def main() -> None:
     i = Importer()
     fetch_freq = get_config('generic', 'dump_fetch_frequency')
     i.run(sleep_in_sec=3600 * fetch_freq)

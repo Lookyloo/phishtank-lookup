@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 import logging
 import logging.config
 
 from importlib.metadata import version
-from typing import Dict
+from typing import Any
 
 from flask import request, Flask
 from flask_restx import Api, Resource, fields  # type: ignore
@@ -34,17 +35,17 @@ phishtank: Phishtank = Phishtank()
 
 @api.route('/redis_up')
 @api.doc(description='Check if redis is up and running')
-class RedisUp(Resource):
+class RedisUp(Resource):  # type: ignore[misc]
 
-    def get(self):
+    def get(self) -> bool:
         return phishtank.check_redis_up()
 
 
 @api.route('/info')
 @api.doc(description='Get info about the instance')
-class Info(Resource):
+class Info(Resource):  # type: ignore[misc]
 
-    def get(self):
+    def get(self) -> dict[str, Any]:
         return phishtank.info()
 
 
@@ -55,9 +56,9 @@ checkurl_fields = api.model('CheckURLFields', {
 
 @api.route('/checkurl')
 @api.doc(description='This method has the same JSON output as the (broken?) official interface.')
-class CheckURL(Resource):
+class CheckURL(Resource):  # type: ignore[misc]
 
-    def _format_response(self, url: str) -> Dict:
+    def _format_response(self, url: str) -> dict[str, Any]:
         entry = phishtank.get_url_entry(url)
         if not entry:
             return {'in_database': False}
@@ -71,15 +72,15 @@ class CheckURL(Resource):
             'valid': 'y'
         }
 
-    @api.param('url', 'The URL to check', required=True)
-    def get(self):
+    @api.param('url', 'The URL to check', required=True)  # type: ignore[misc]
+    def get(self) -> dict[str, Any] | tuple[dict[str, Any], int]:
         if 'url' not in request.args or not request.args.get('url'):
             return {'error': 'The URL is required...'}, 400
         return self._format_response(request.args['url'])
 
-    @api.doc(body=checkurl_fields)
-    def post(self):
-        to_query: Dict = request.get_json(force=True)
+    @api.doc(body=checkurl_fields)  # type: ignore[misc]
+    def post(self) -> dict[str, Any] | tuple[dict[str, Any], int]:
+        to_query: dict[str, Any] = request.get_json(force=True)
         if 'url' not in to_query or not to_query.get('url'):
             return {'error': 'The URL is required...'}, 400
         return self._format_response(to_query['url'])
@@ -87,9 +88,9 @@ class CheckURL(Resource):
 
 @api.route('/url')
 @api.doc(description='Get the full URL entry')
-class URL(Resource):
-    @api.param('url', 'The URL to query', required=True)
-    def get(self):
+class URL(Resource):  # type: ignore[misc]
+    @api.param('url', 'The URL to query', required=True)  # type: ignore[misc]
+    def get(self) -> dict[str, Any] | tuple[dict[str, str], int] | None:
         if 'url' not in request.args or not request.args.get('url'):
             return {'error': 'The URL is required...'}, 400
         return phishtank.get_url_entry(request.args['url'])
@@ -97,42 +98,42 @@ class URL(Resource):
 
 @api.route('/urls')
 @api.doc(description='Get all the URLs')
-class URLs(Resource):
+class URLs(Resource):  # type: ignore[misc]
 
-    def get(self):
+    def get(self) -> list[str] | None:
         return phishtank.get_urls()
 
 
 @api.route('/ips')
 @api.doc(description='Get all the IPs')
-class IPs(Resource):
+class IPs(Resource):  # type: ignore[misc]
 
-    def get(self):
+    def get(self) -> list[str] | None:
         return phishtank.get_ips()
 
 
 @api.route('/asns')
 @api.doc(description='Get all the ASNs')
-class ASNs(Resource):
+class ASNs(Resource):  # type: ignore[misc]
 
-    def get(self):
+    def get(self) -> list[str] | None:
         return phishtank.get_asns()
 
 
 @api.route('/ccs')
 @api.doc(description='Get all the Country Codes')
-class CCs(Resource):
+class CCs(Resource):  # type: ignore[misc]
 
-    def get(self):
+    def get(self) -> list[str] | None:
         return phishtank.get_ccs()
 
 
 @api.route('/urls_by_ip')
 @api.doc(description='Get all the URLs by IP')
-class URLsByIPs(Resource):
+class URLsByIPs(Resource):  # type: ignore[misc]
 
-    @api.param('ip', 'The IP to query', required=True)
-    def get(self):
+    @api.param('ip', 'The IP to query', required=True)  # type: ignore[misc]
+    def get(self) -> list[str] | tuple[dict[str, str], int] | None:
         if 'ip' not in request.args or not request.args.get('ip'):
             return {'error': 'The IP is required...'}, 400
         return phishtank.get_urls_by_ip(request.args['ip'])
@@ -140,10 +141,10 @@ class URLsByIPs(Resource):
 
 @api.route('/urls_by_asn')
 @api.doc(description='Get all the URLs by ASN')
-class URLsByASN(Resource):
+class URLsByASN(Resource):  # type: ignore[misc]
 
-    @api.param('asn', 'The ASN to query', required=True)
-    def get(self):
+    @api.param('asn', 'The ASN to query', required=True)  # type: ignore[misc]
+    def get(self) -> list[str] | tuple[dict[str, str], int] | None:
         if 'asn' not in request.args or not request.args.get('asn'):
             return {'error': 'The ASN is required...'}, 400
         return phishtank.get_urls_by_asn(request.args['asn'])
@@ -151,10 +152,10 @@ class URLsByASN(Resource):
 
 @api.route('/urls_by_cc')
 @api.doc(description='Get all the URLs by Country Code')
-class URLsByCC(Resource):
+class URLsByCC(Resource):  # type: ignore[misc]
 
-    @api.param('cc', 'The CC to query', required=True)
-    def get(self):
+    @api.param('cc', 'The CC to query', required=True)  # type: ignore[misc]
+    def get(self) -> list[str] | tuple[dict[str, str], int] | None:
         if 'cc' not in request.args or not request.args.get('cc'):
             return {'error': 'The Country Code is required...'}, 400
         return phishtank.get_urls_by_cc(request.args['cc'])

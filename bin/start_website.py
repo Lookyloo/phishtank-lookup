@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from __future__ import annotations
+
 import logging
 import logging.config
 from subprocess import Popen
@@ -18,7 +20,7 @@ class Website(AbstractManager):
         self.process = self._launch_website()
         self.set_running()
 
-    def _launch_website(self):
+    def _launch_website(self) -> Popen:  # type: ignore[type-arg]
         website_dir = get_homedir() / 'website'
         ip = get_config('generic', 'website_listen_ip')
         port = get_config('generic', 'website_listen_port')
@@ -30,7 +32,7 @@ class Website(AbstractManager):
                      cwd=website_dir)
 
 
-def main():
+def main() -> None:
     w = Website()
     w.run(sleep_in_sec=10)
 

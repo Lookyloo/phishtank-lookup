@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 import json
 import logging
-from typing import Optional, Dict
+from typing import Any
 
 from redis import ConnectionPool, Redis
 from redis.connection import UnixDomainSocketConnection
@@ -20,13 +21,13 @@ class Phishtank():
                                                          path=get_socket_path('cache'), decode_responses=True)
 
     @property
-    def redis(self):
+    def redis(self) -> Redis:  # type: ignore[type-arg]
         return Redis(connection_pool=self.redis_pool)
 
-    def check_redis_up(self):
+    def check_redis_up(self) -> bool:
         return self.redis.ping()
 
-    def info(self):
+    def info(self) -> dict[str, Any]:
         return {
             "expire_urls": get_config('generic', 'expire_urls'),
             "dump_fetch_frequency": get_config('generic', 'dump_fetch_frequency'),
@@ -36,30 +37,30 @@ class Phishtank():
             "unique_ips": self.redis.zcard('ips')
         }
 
-    def get_url_entry(self, url: str) -> Optional[Dict]:
+    def get_url_entry(self, url: str) -> dict[str, Any] | None:
         entry = self.redis.hgetall(url)
         if not entry:
             return None
         entry['details'] = json.loads(entry['details'])
         return entry
 
-    def get_ips(self) -> Optional[str]:
+    def get_ips(self) -> list[str] | None:
         return self.redis.zrangebyscore('ips', '-Inf', '+Inf')
 
-    def get_asns(self) -> Optional[str]:
+    def get_asns(self) -> list[str] | None:
         return self.redis.zrangebyscore('asns', '-Inf', '+Inf')
 
-    def get_ccs(self) -> Optional[str]:
+    def get_ccs(self) -> list[str] | None:
         return self.redis.zrangebyscore('ccs', '-Inf', '+Inf')
 
-    def get_urls(self) -> Optional[str]:
+    def get_urls(self) -> list[str] | None:
         return self.redis.zrangebyscore('urls', '-Inf', '+Inf')
 
-    def get_urls_by_ip(self, ip: str) -> Optional[str]:
+    def get_urls_by_ip(self, ip: str) -> list[str] | None:
         return self.redis.zrangebyscore(ip, '-Inf', '+Inf')
 
-    def get_urls_by_asn(self, asn: str) -> Optional[str]:
+    def get_urls_by_asn(self, asn: str) -> list[str] | None:
         return self.redis.zrangebyscore(asn, '-Inf', '+Inf')
 
-    def get_urls_by_cc(self, cc: str) -> Optional[str]:
+    def get_urls_by_cc(self, cc: str) -> list[str] | None:
         return self.redis.zrangebyscore(cc, '-Inf', '+Inf')
