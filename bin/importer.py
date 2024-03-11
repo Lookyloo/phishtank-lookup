@@ -77,6 +77,10 @@ class Importer(AbstractManager):
         response = requests.get(self.json_db_url, headers=headers)
         self.logger.info('Fetching done.')
         if content := response.content:
+            if content[0] == b'<':
+                self.logger.error('Got the dumb JS page, will try again later...')
+                return None
+
             try:
                 json_response = json.loads(bz2.decompress(content))
             except Exception as e:
