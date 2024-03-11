@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import gzip
+import bz2
 import json
 import logging
 import logging.config
 import shutil
+
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -38,11 +40,12 @@ class Importer(AbstractManager):
         phishtank_api_key = get_config('generic', 'phishtank_api_key')
         self.expire_urls = get_config('generic', 'expire_urls')
         self.fetch_freq = get_config('generic', 'dump_fetch_frequency')
+        self.useragent = get_config('generic', 'phishtank_useragent')
 
         if phishtank_api_key:
-            self.json_db_url = f'https://data.phishtank.com/data/{phishtank_api_key}/online-valid.json'
+            self.json_db_url = f'https://data.phishtank.com/data/{phishtank_api_key}/online-valid.json.bz2'
         else:
-            self.json_db_url = 'https://data.phishtank.com/data/online-valid.json'
+            self.json_db_url = 'https://data.phishtank.com/data/online-valid.json.bz2'
 
     def _to_run_forever(self) -> None:
         if to_import := self._fetch():
@@ -70,13 +73,22 @@ class Importer(AbstractManager):
         # response = requests.head(self.json_db_url)
 
         self.logger.info('Fetching new file...')
-        headers = {'user-agent': 'phishtank/phishtank-lookup (Lookyloo)'}
+        headers = {'user-agent': self.useragent}
         response = requests.get(self.json_db_url, headers=headers)
         self.logger.info('Fetching done.')
-        dest_file = self.data_dir / f'{datetime.now().isoformat()}.json'
-        with dest_file.open('w') as f:
-            json.dump(response.json(), f)
-        return dest_file
+        if content := response.content:
+            try:
+                json_response = json.loads(bz2.decompress(content))
+            except Exception as e:
+                self.logger.error(f'Error while reading bz2 file from {self.json_db_url}: {e}')
+                return None
+            dest_file = self.data_dir / f'{datetime.now().isoformat()}.json'
+            with dest_file.open('w') as f:
+                json.dump(json_response, f)
+            return dest_file
+        else:
+            self.logger.error('JSON received from Phishtank is empty.')
+            return None
 
     def _import(self, to_import: Path) -> None:
         '''Import a dump
