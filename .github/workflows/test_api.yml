@@ -30,7 +30,7 @@ jobs:
     - name: Clone Valkey
       uses: actions/checkout@v4
       with:
-        repository: valkey-io/valey
+        repository: valkey-io/valkey
         path: valkey-tmp
         ref: '8.0'
 
