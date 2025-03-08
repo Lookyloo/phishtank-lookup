@@ -27,7 +27,7 @@ start_website = "bin.start_website:main"
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.15.0"
 types-redis = "^4.6.0.20241004"
-types-requests = "^2.32.0.20250301"
+types-requests = "^2.32.0.20250306"
 pytest-cov = "^6.0.0"
 
 [build-system]
