@@ -129,7 +129,7 @@ class Importer(AbstractManager):
             zranks_to_expire = ['urls', 'ips', 'asns', 'ccs']
             p.zadd('urls', {url: expire_zranks for url in urls.keys()})
             for url, entry in urls.items():
-                p.hmset(url, entry)
+                p.hmset(url, entry)  # type: ignore[arg-type]
                 p.expire(url, expire_in_sec)
 
             p.zadd('ips', {ip: expire_zranks for ip in ips.keys()})

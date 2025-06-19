@@ -25,10 +25,10 @@ run_backend = "bin.run_backend:main"
 start_website = "bin.start_website:main"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.15.0"
+mypy = "^1.16.1"
 types-redis = "^4.6.0.20241004"
-types-requests = "^2.32.0.20250515"
-pytest-cov = "^6.1.1"
+types-requests = "^2.32.4.20250611"
+pytest-cov = "^6.2.1"
 
 [build-system]
 requires = ["poetry-core>=2.0"]
