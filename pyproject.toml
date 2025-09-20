@@ -5,7 +5,7 @@ description = "Simple Tool to query a local Phishtank database"
 authors = [{name="Raphaël Vinot", email="raphael.vinot@circl.lu"}]
 license = "BSD-3-Clause"
 readme = "README.md"
-requires-python = "^3.9.2"
+requires-python = "^3.10"
 
 dependencies = [
     "redis[hiredis] (>=5.3.0,<6.0.0)",
