@@ -1,6 +1,6 @@
 [project]
 name = "phishtank"
-version = "1.4.0"
+version = "1.5.0"
 description = "Simple Tool to query a local Phishtank database"
 authors = [{name="Raphaël Vinot", email="raphael.vinot@circl.lu"}]
 license = "BSD-3-Clause"
@@ -12,7 +12,7 @@ dependencies = [
     "werkzeug (>=3.1.3)",
     "flask-restx (>=1.3.0)",
     "gunicorn[setproctitle] (>=23.0.0)",
-    "pyphishtanklookup (>=1.4.2)"
+    "pyphishtanklookup (>=1.4.3)"
 ]
 
 [project.scripts]
@@ -25,10 +25,10 @@ run_backend = "bin.run_backend:main"
 start_website = "bin.start_website:main"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.17.1"
+mypy = "^1.18.2"
 types-redis = "^4.6.0.20241004"
-types-requests = "^2.32.4.20250809"
-pytest-cov = "^6.3.0"
+types-requests = "^2.32.4.20250913"
+pytest-cov = "^7.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0"]
