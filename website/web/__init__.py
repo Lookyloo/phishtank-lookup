@@ -72,13 +72,13 @@ class CheckURL(Resource):  # type: ignore[misc]
             'valid': 'y'
         }
 
-    @api.param('url', 'The URL to check', required=True)  # type: ignore[misc]
+    @api.param('url', 'The URL to check', required=True)  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any] | tuple[dict[str, Any], int]:
         if 'url' not in request.args or not request.args.get('url'):
             return {'error': 'The URL is required...'}, 400
         return self._format_response(request.args['url'])
 
-    @api.doc(body=checkurl_fields)  # type: ignore[misc]
+    @api.doc(body=checkurl_fields)  # type: ignore[untyped-decorator]
     def post(self) -> dict[str, Any] | tuple[dict[str, Any], int]:
         to_query: dict[str, Any] = request.get_json(force=True)
         if 'url' not in to_query or not to_query.get('url'):
@@ -89,7 +89,7 @@ class CheckURL(Resource):  # type: ignore[misc]
 @api.route('/url')
 @api.doc(description='Get the full URL entry')
 class URL(Resource):  # type: ignore[misc]
-    @api.param('url', 'The URL to query', required=True)  # type: ignore[misc]
+    @api.param('url', 'The URL to query', required=True)  # type: ignore[untyped-decorator]
     def get(self) -> dict[str, Any] | tuple[dict[str, str], int] | None:
         if 'url' not in request.args or not request.args.get('url'):
             return {'error': 'The URL is required...'}, 400
@@ -132,7 +132,7 @@ class CCs(Resource):  # type: ignore[misc]
 @api.doc(description='Get all the URLs by IP')
 class URLsByIPs(Resource):  # type: ignore[misc]
 
-    @api.param('ip', 'The IP to query', required=True)  # type: ignore[misc]
+    @api.param('ip', 'The IP to query', required=True)  # type: ignore[untyped-decorator]
     def get(self) -> list[str] | tuple[dict[str, str], int] | None:
         if 'ip' not in request.args or not request.args.get('ip'):
             return {'error': 'The IP is required...'}, 400
@@ -143,7 +143,7 @@ class URLsByIPs(Resource):  # type: ignore[misc]
 @api.doc(description='Get all the URLs by ASN')
 class URLsByASN(Resource):  # type: ignore[misc]
 
-    @api.param('asn', 'The ASN to query', required=True)  # type: ignore[misc]
+    @api.param('asn', 'The ASN to query', required=True)  # type: ignore[untyped-decorator]
     def get(self) -> list[str] | tuple[dict[str, str], int] | None:
         if 'asn' not in request.args or not request.args.get('asn'):
             return {'error': 'The ASN is required...'}, 400
@@ -154,7 +154,7 @@ class URLsByASN(Resource):  # type: ignore[misc]
 @api.doc(description='Get all the URLs by Country Code')
 class URLsByCC(Resource):  # type: ignore[misc]
 
-    @api.param('cc', 'The CC to query', required=True)  # type: ignore[misc]
+    @api.param('cc', 'The CC to query', required=True)  # type: ignore[untyped-decorator]
     def get(self) -> list[str] | tuple[dict[str, str], int] | None:
         if 'cc' not in request.args or not request.args.get('cc'):
             return {'error': 'The Country Code is required...'}, 400
