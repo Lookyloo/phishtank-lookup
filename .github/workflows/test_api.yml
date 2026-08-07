@@ -18,7 +18,7 @@ jobs:
     name: Python ${{ matrix.python-version }} sample
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Install poetry
       run: pipx install poetry
@@ -30,7 +30,7 @@ jobs:
         cache: 'poetry'
 
     - name: Clone Valkey
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: valkey-io/valkey
         path: valkey-tmp
@@ -52,7 +52,7 @@ jobs:
         poetry run start
 
     - name: Clone PyPhishtankLookup
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: Lookyloo/PyPhishtankLookup
         path: PyPhishtankLookup
